@@ -1,0 +1,1 @@
+# centos6_x64_mozc_installer
