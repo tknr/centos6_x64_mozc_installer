@@ -1,4 +1,7 @@
 #!/bin/bash
+EPEL_URL_ROOT="http://dl.fedoraproject.org/pub/epel/6/x86_64/"
+VINE_URL_ROOT="http://ftp.kddilabs.jp/pub/Linux/packages/Vine/Vine-6.3/x86_64/Vine/RPMS/"
+mkdir -p rpm
 
 if [ "$UID" -eq 0 ];then
     echo "root!"
@@ -7,19 +10,21 @@ if [ "$UID" -eq 0 ];then
     echo "■setup start " ${0};
     echo "＋------------------------------------------------------------------------------------------------------------＋";
 
-    wget http://dl.fedoraproject.org/pub/epel/6/x86_64/protobuf-2.3.0-9.el6.x86_64.rpm
-    wget http://ftp.kddilabs.jp/pub/Linux/packages/Vine/Vine-6.3/x86_64/Vine/RPMS/zinnia-0.06-3vl6.x86_64.rpm
-    wget http://ftp.kddilabs.jp/pub/Linux/packages/Vine/Vine-6.3/x86_64/Vine/RPMS/tegaki-zinnia-japanese-0.3-1vl6.noarch.rpm
-    wget http://ftp.kddilabs.jp/pub/Linux/packages/Vine/Vine-6.3/x86_64/Vine/RPMS/mozc-server-1.5.1090.102-1vl6.x86_64.rpm
-    wget http://ftp.kddilabs.jp/pub/Linux/packages/Vine/Vine-6.3/x86_64/Vine/RPMS/mozc-utils-gui-1.5.1090.102-1vl6.x86_64.rpm
-    wget http://ftp.kddilabs.jp/pub/Linux/packages/Vine/Vine-6.3/x86_64/Vine/RPMS/ibus-mozc-1.5.1090.102-1vl6.x86_64.rpm
-    wget http://ftp.kddilabs.jp/pub/Linux/packages/Vine/Vine-6.3/x86_64/Vine/RPMS/mozc-1.5.1090.102-1vl6.x86_64.rpm
-    mkdir -p rpm
+    for RPM in `wget -q -O - ${EPEL_URL_ROOT} | cut -d '"' -f 6 | grep "^protobuf-" | grep "x86_64.rpm$" | sort | head -1`
+    do
+	wget ${EPEL_URL_ROOT}${RPM} 
+    done
+
+    for RPM in `wget -q -O - ${VINE_URL_ROOT} | cut -d '"' -f 6 | grep ".rpm$" | egrep "zinnia|mozc"`
+    do
+	    wget ${VINE_URL_ROOT}${RPM} 
+    done
+
     mv *.rpm rpm/
 
-    rpm -Uvh rpm/protobuf-2.3.0-9.el6.x86_64.rpm rpm/zinnia-0.06-3vl6.x86_64.rpm rpm/tegaki-zinnia-japanese-0.3-1vl6.noarch.rpm rpm/mozc-server-1.5.1090.102-1vl6.x86_64.rpm rpm/mozc-utils-gui-1.5.1090.102-1vl6.x86_64.rpm rpm/ibus-mozc-1.5.1090.102-1vl6.x86_64.rpm rpm/mozc-1.5.1090.102-1vl6.x86_64.rpm
+    rpm -Uvh $( find rpm/ -name *.rpm )
 
-#    rm -f rpm/*.*
+    rm -f rpm/*.*
 
     echo "＋------------------------------------------------------------------------------------------------------------＋";
     echo "■setup end";
