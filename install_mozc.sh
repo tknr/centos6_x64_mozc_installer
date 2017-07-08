@@ -1,6 +1,6 @@
 #!/bin/bash
 EPEL_URL_ROOT="http://dl.fedoraproject.org/pub/epel/6/x86_64/"
-VINE_URL_ROOT="http://ftp.kddilabs.jp/pub/Linux/packages/Vine/Vine-6.3/x86_64/Vine/RPMS/"
+VINE_URL_ROOT="http://ftp.kddilabs.jp/pub/Linux/packages/Vine/Vine-6.5/x86_64/Vine/RPMS/"
 mkdir -p rpm
 
 if [ "$UID" -eq 0 ];then
